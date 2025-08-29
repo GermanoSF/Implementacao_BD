@@ -1,0 +1,115 @@
+-- Encontrar os funcionarios que ganham mais que qualquer funcionario da 'Admistração'
+SELECT F.Pnome, F.Salario
+FROM FUNCIONARIO AS F
+WHERE F.Salario > ALL
+(SELECT A.Salario
+FROM FUNCIONARIO AS A
+INNER JOIN DEPARTAMENTO AS D
+ON D.Dnumero = A.Dnr
+WHERE D.Dnome ='Administração');
+
+-- ENCONTRAR PROJETOS QUE EXIGEM MAIS HORAS DO QUE TODOS OS PROJETOS NO LOCAL 'Itu' ou 'Santo André'
+SELECT P.Projnome,SUM(TE.Horas)
+FROM PROJETO AS P
+INNER JOIN TRABALHA_EM AS TE
+ON TE.Pnr = P.Projnumero
+GROUP BY P.Projnome
+HAVING SUM(TE.Horas) > ALL
+(SELECT SUM(TEP.Horas)
+FROM TRABALHA_EM AS TEP
+INNER JOIN PROJETO AS PE
+ON PE.Projnumero = TEP.Pnr
+WHERE PE.Projlocal = 'Itu' OR PE.Projlocal = 'Santo André'
+GROUP BY PE.Projnome);
+
+-- VARIAVEIS
+DECLARE @idade INT,
+		@nome VARCHAR(40),
+		@data DATE,
+		@grana MONEY;
+
+SET @nome = 'Germano Spall Figueira';
+SET @data = '2005-09-09';
+SET @grana = 50.55;
+SET @idade = YEAR(GETDATE()) - YEAR(@data);
+
+SELECT @nome AS 'NOME', @data AS 'DATA', @idade AS 'IDADE', @grana AS 'DINHEIRO';
+
+PRINT 'MEU NOME É: ' + @nome + 'Idade: ' +CAST(@idade AS VARCHAR(11));
+
+
+-- RECUPERE O NOME DO DEPARTAMENTO COM Dnumero = 4
+DECLARE @nome_departamento VARCHAR(100);
+
+SELECT @nome_departamento = D.Dnome
+FROM DEPARTAMENTO AS D
+WHERE D.Dnumero = 4;
+
+PRINT @nome_departamento;
+
+-- AUMENTO 10% SALARIO Jennifer
+DECLARE @salario_velho DECIMAL(10,2), @salario_novo DECIMAL(10,2);
+
+SELECT @salario_velho = F.Salario
+FROM FUNCIONARIO AS F
+WHERE F.Pnome = 'Jennifer';
+
+SET @salario_novo = @salario_velho * 1.1;
+
+PRINT 'SALARIO VELHO: ' + CAST(@salario_velho AS VARCHAR(9)) + ' SALARIO NOVO: ' + CAST(@salario_novo AS VARCHAR(9));
+
+-- IDADE Jennifer
+DECLARE @idade_jen INT;
+DECLARE @datanasc DATE;
+
+SELECT @datanasc = F.Datanasc
+FROM FUNCIONARIO AS F
+WHERE F.Pnome = 'Jennifer';
+
+SET @idade_jen = YEAR(GETDATE()) - YEAR(@datanasc);
+
+PRINT 'Idade da Jennifer: '+CAST(@idade_jen AS VARCHAR(3));
+
+-- IF/ELSE
+DECLARE @sal FLOAT, @media FLOAT, @numero_m INT;
+		
+SELECT @sal = F.Salario
+FROM FUNCIONARIO AS F
+WHERE F.Pnome ='Jennifer';
+
+PRINT 'SALARIO Jennifer: ' + CAST(@sal AS VARCHAR(9));
+
+SELECT @numero_m = COUNT(*)
+FROM FUNCIONARIO;
+
+SELECT @media = SUM(F.Salario)
+FROM FUNCIONARIO AS F;
+
+SET @media = @media/CAST(@numero_m AS FLOAT);
+
+PRINT 'MEDIA: ' + CAST(@media AS VARCHAR(9));
+
+IF @sal < @media 
+	PRINT 'Jennifer ganha menos que a media';
+ELSE
+	PRINT 'Jennifer ganha mais que a media';
+
+-- IDADE CORRETA DO FERNANDO
+DECLARE @idade_fer INT, @data_a DATE, @mes INT, @dia INT;
+
+SELECT @data_a = F.Datanasc
+FROM FUNCIONARIO AS F
+WHERE F.Pnome = 'Fernando';
+
+SET @mes = MONTH(GETDATE()) - MONTH(@data_a);
+
+SET @dia = DAY(GETDATE()) - DAY(@data_a);
+
+IF @mes < 1
+BEGIN 
+	IF @dia < 1
+
+PRINT 'IDADE DO FERNANDO: '+@idade_fer;
+
+
+
