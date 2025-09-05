@@ -1,0 +1,54 @@
+CREATE FUNCTION f2(@Numero INT)
+RETURNS INT
+AS 
+BEGIN
+	RETURN @Numero * 5;
+END
+
+
+
+
+
+
+
+
+
+
+
+CREATE FUNCTION fns_departamento(@Dnome VARCHAR(15))
+RETURNS TABLE 
+AS 
+RETURN(
+
+	SELECT F.Pnome AS 'NOME DO FUNCIONARIO'
+	FROM FUNCIONARIO AS F
+	INNER JOIN DEPARTAMENTO AS D
+	ON F.Dnr = D.Dnumero
+	WHERE D.Dnome = @Dnome
+
+);
+
+
+
+
+
+
+
+CREATE FUNCTION idade(@DataN DATE)
+RETURNS INT
+AS
+BEGIN
+	DECLARE @idade INT;
+	SET @idade = YEAR(GETDATE())-YEAR(@DataN);
+	IF MONTH(@DataN) > MONTH(GETDATE()) OR (MONTH(@DataN) = MONTH(GETDATE()) AND DAY(@DataN) > DAY(GETDATE()))
+		SET @idade = @idade - 1;
+	RETURN @idade;
+END
+
+
+
+
+
+
+
+
