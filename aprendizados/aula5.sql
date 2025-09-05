@@ -1,0 +1,61 @@
+USE EMPRESA;
+
+DECLARE @tamanho INT;
+
+SELECT @tamanho = SUM(1)
+FROM DEPARTAMENTO AS D
+INNER JOIN FUNCIONARIO AS F
+ON F.Dnr = D.Dnumero
+WHERE D.Dnome = 'Administração';
+
+IF @tamanho < 4
+BEGIN
+	SELECT D.Dnome AS 'PEQUENO',F.Pnome AS 'FUNCIONARIOS'
+	FROM DEPARTAMENTO AS D
+	INNER JOIN FUNCIONARIO AS F
+	ON D.Dnumero = F.Dnr
+	WHERE D.Dnome = 'Administração'
+END
+
+ELSE
+BEGIN
+	SELECT D.Dnome AS 'MEDIO OU GRANDE',F.Pnome AS 'FUNCIONARIOS'
+	FROM DEPARTAMENTO AS D
+	INNER JOIN FUNCIONARIO AS F
+	ON D.Dnumero = F.Dnr
+	WHERE D.Dnome = 'Administração'
+END
+
+
+SELECT DEPARTAMENTO.Dnome FROM DEPARTAMENTO;
+
+-- AUMENTAR SALARIO DA JOICE ATE CHEGAR OU PASSAR DE 30000 DE 5% EM 5%
+
+DECLARE @salario FLOAT;
+DECLARE @aumento INT;
+DECLARE @ate FLOAT;
+
+SET @ate = 30000;
+SET @aumento = 5;
+
+SELECT @salario = F.Salario
+FROM FUNCIONARIO AS F
+WHERE F.Pnome = 'Joice' AND F.Unome = 'Leite'
+
+PRINT CAST(@salario AS VARCHAR(10));
+
+WHILE @salario <= @ate
+BEGIN
+	SET @salario = @salario + (@salario*@aumento/100);
+	PRINT CAST(@salario AS VARCHAR(10));
+END
+
+
+-- IDADE CORRETA DOS FUNCIONARIOS
+
+SELECT dbo.idade(F.Datanasc) AS 'IDADE', F.Pnome AS 'NOME'
+FROM FUNCIONARIO AS F;
+
+-- FUNCIONARIOS DO DEPARTAMENTO ADMISTRAÇÃO
+
+SELECT * FROM dbo.fns_departamento('Administração');
