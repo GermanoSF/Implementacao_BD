@@ -1,0 +1,80 @@
+-- TRIGGERS
+CREATE OR ALTER TRIGGER trg_teste_after
+ON FUNCIONARIO
+INSTEAD OF INSERT
+AS
+PRINT 'FUNCIONARIO NAO INSERIDO!';
+GO
+
+CREATE OR ALTER TRIGGER trg_if
+ON FUNCIONARIO 
+AFTER UPDATE
+AS
+BEGIN
+	IF UPDATE(Pnome)
+	BEGIN
+		DECLARE @nome_novo VARCHAR(100);
+		DECLARE @nome_antigo VARCHAR(100);
+		SELECT @nome_novo = Pnome FROM INSERTED;
+		SELECT @nome_antigo = Pnome FROM DELETED;
+		PRINT 'Era: '+@nome_antigo;
+		PRINT 'Agora ficou: '+@nome_novo;
+	END
+	ELSE
+	BEGIN
+		PRINT 'Primero nome nao alterado';
+	END
+END;
+GO
+
+CREATE OR ALTER TRIGGER trg_insercao
+ON FUNCIONARIO
+AFTER INSERT,UPDATE,DELETE
+AS
+BEGIN
+	-------------TERMINAR
+END;
+GO
+
+-- Desabilitar TRIGGER
+ALTER TABLE FUNCIONARIO
+DISABLE TRIGGER trg_teste_after;
+GO
+
+-- Help
+EXEC sp_helptrigger @tabname = FUNCIONARIO;
+GO
+
+-- INSERTS
+INSERT INTO FUNCIONARIO (Cpf,Pnome,Unome,Minicial)
+VALUES ('8737473','GG','Ge','G');
+GO
+
+INSERT INTO FUNCIONARIO (Cpf,Pnome,Unome,Minicial)
+VALUES ('2335343','Kscerato','Molodoy','M');
+GO
+
+-- UPDATE
+UPDATE FUNCIONARIO
+SET Pnome = 'AG'
+WHERE Cpf = '8737473';
+GO
+
+-- SELECTS
+SELECT * FROM FUNCIONARIO;
+GO
+
+SELECT * FROM Log_funcionario;
+GO
+
+-- Log
+CREATE TABLE Log_funcionario(
+	LogID INT IDENTITY(1,1) PRIMARY KEY, 
+	Cpf CHAR(11),
+	Operacao VARCHAR(10),
+	Data_Hora DATETIME DEFAULT GETDATE()
+);
+
+
+
+
